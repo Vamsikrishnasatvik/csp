@@ -1,7 +1,7 @@
 "use client"
 
-import { Bar, BarChart, CartesianGrid, XAxis, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
-import { ChartContainer, ChartTooltipContent, ChartConfig } from "@/components/ui/chart"
+import { Bar, BarChart, CartesianGrid, XAxis, Pie, PieChart, ResponsiveContainer } from "recharts"
+import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartConfig } from "@/components/ui/chart"
 import { mockAnalytics } from "@/lib/data";
 
 const ridesChartConfig = {
@@ -108,7 +108,7 @@ export function CommutePatternsChart() {
                 <BarChart layout="vertical" data={mockAnalytics.commutePatterns}>
                     <CartesianGrid horizontal={false} />
                     <XAxis type="number" hide />
-                    <Tooltip cursor={{fill: 'hsl(var(--muted))'}} content={<ChartTooltipContent />}/>
+                    <ChartTooltip cursor={{fill: 'hsl(var(--muted))'}} content={<ChartTooltipContent />}/>
                     <Bar dataKey="count" layout="vertical" radius={4}>
                          {mockAnalytics.commutePatterns.map((entry, index) => (
                             <div key={`cell-${index}`} fill={patternsChartConfig[entry.type as keyof typeof patternsChartConfig]?.color} />
