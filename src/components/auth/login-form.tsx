@@ -7,17 +7,19 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Shield, User } from "lucide-react";
 import { useState } from "react";
-import { toast } from "@/hooks/use-toast";
+// Update the import path below if your 'use-toast' file is located elsewhere, e.g.:
+// import { Toast } from "@/components/ui/toast";
+// or, if you don't have a toast utility, comment out or remove this line and related toast usages.
 
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }),
   password: z.string().min(6, { message: "Password must be at least 6 characters." }),
-  adminKey: z.string().optional(),
 });
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -40,7 +42,6 @@ export function LoginForm({ userType }: LoginFormProps) {
     defaultValues: {
       email: "",
       password: "",
-      adminKey: "",
     },
   });
 
@@ -58,9 +59,15 @@ export function LoginForm({ userType }: LoginFormProps) {
       });
 
       const data = await response.json();
+      console.log('Login response data:', data);
 
       if (!response.ok) {
         throw new Error(data.error);
+      }
+
+      // Save role to localStorage for navigation
+      if (typeof window !== "undefined") {
+        localStorage.setItem("role", data.role);
       }
 
       toast({
@@ -68,9 +75,18 @@ export function LoginForm({ userType }: LoginFormProps) {
         description: "Redirecting to dashboard...",
       });
 
-      // Redirect based on user role
-      const destination = data.role === 'admin' ? '/admin/dashboard' : '/dashboard';
-      router.push(destination);
+      // Redirect strictly based on user role
+      if (data.role === 'admin') {
+        router.push('/admin/dashboard');
+      } else if (data.role === 'user') {
+        router.push('/dashboard');
+      } else {
+        toast({
+          title: "Error",
+          description: "Unauthorized role.",
+          variant: "destructive",
+        });
+      }
       
     } catch (error) {
       toast({
@@ -127,21 +143,6 @@ export function LoginForm({ userType }: LoginFormProps) {
               </FormItem>
             )}
           />
-          {!isStudent && (
-             <FormField
-                control={form.control}
-                name="adminKey"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Admin Key</FormLabel>
-                    <FormControl>
-                        <Input type="password" placeholder="Enter your admin key" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-            />
-          )}
 
           <div className="text-right text-sm">
             <Link href="#" className="underline underline-offset-4 hover:text-primary">
@@ -150,11 +151,7 @@ export function LoginForm({ userType }: LoginFormProps) {
           </div>
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? (
-              <>Logging in...</>
-            ) : (
-              <>Login as {isStudent ? 'Student' : 'Admin'}</>
-            )}
+            {isLoading ? 'Logging in...' : `Login as ${isStudent ? 'Student' : 'Admin'}`}
           </Button>
         </form>
       </Form>

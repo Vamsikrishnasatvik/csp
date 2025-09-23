@@ -13,6 +13,7 @@ import {
   SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { Bus, LayoutDashboard, User, Car, BookOpen, Route, LogOut } from 'lucide-react';
+import { Button } from '../ui/button';
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -78,8 +79,24 @@ export function UserSidebar() {
         <SidebarMenu>
             <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => router.push('/')} tooltip="Logout">
-                    <LogOut />
-                    <span>Logout</span>
+                     <Button
+                      
+                        className="w-full flex items-center gap-2"
+                        onClick={() => {
+                          if (typeof window !== "undefined") {
+                            localStorage.clear();
+                            sessionStorage.clear();
+                             document.cookie.split(";").forEach((c) => {
+                              document.cookie = c
+                                .replace(/^ +/, "")
+                                .replace(/=.*/, "=;expires=" + new Date(0).toUTCString() + ";path=/");
+                            });
+                          }
+                          router.push('/');
+                        }}
+                      >
+                        Logout
+                      </Button>
                 </SidebarMenuButton>
             </SidebarMenuItem>
         </SidebarMenu>

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { usePathname, useRouter } from 'next/navigation';
@@ -13,6 +12,7 @@ import {
   SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { Bus, LayoutDashboard, Users, Car, Map, Bell, BarChart, LogOut } from 'lucide-react';
+import { Button } from '../ui/button';
 
 const adminMenuItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: BarChart },
@@ -56,14 +56,26 @@ export function AdminSidebar() {
       </SidebarContent>
       <SidebarFooter className="p-2">
         <SidebarSeparator />
-        <SidebarMenu>
-            <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => router.push('/')} tooltip="Logout">
-                    <LogOut />
-                    <span>Logout</span>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-        </SidebarMenu>
+        <div className="flex justify-center">
+          <Button
+           
+            className="w-full flex items-center gap-2"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                localStorage.clear();
+                sessionStorage.clear();
+                 document.cookie.split(";").forEach((c) => {
+                  document.cookie = c
+                    .replace(/^ +/, "")
+                    .replace(/=.*/, "=;expires=" + new Date(0).toUTCString() + ";path=/");
+                });
+              }
+              router.push('/');
+            }}
+          >
+            Logout
+          </Button>
+        </div>
       </SidebarFooter>
     </>
   );

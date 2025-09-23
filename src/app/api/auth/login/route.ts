@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   try {
     await dbConnect();
     
-    const { email, password, adminKey } = await request.json();
+    const { email, password } = await request.json();
 
     // Find user by email
     const user = await User.findOne({ email });
@@ -30,23 +30,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // If admin login, verify admin role and key
-    if (adminKey) {
-      if (user.role !== 'admin') {
-        return NextResponse.json(
-          { error: 'Unauthorized access' },
-          { status: 403 }
-        );
-      }
-      // Add your admin key verification logic here
-      if (adminKey !== process.env.ADMIN_KEY) {
-        return NextResponse.json(
-          { error: 'Invalid admin key' },
-          { status: 401 }
-        );
-      }
-    }
-
     // Set user cookie after successful login
     const cookieStore = await cookies();
     cookieStore.set('userId', user._id.toString(), {
@@ -58,10 +41,14 @@ export async function POST(request: Request) {
 
     // Return user data (exclude password)
     const userData = {
-      id: user._id,
+      id: user._id.toString(), // Convert ObjectId to string
       name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role,
+      department: user.department,
+      year: user.year,
+      carpoolPreference: user.carpoolPreference,
+      vehicleDetails: user.vehicleDetails
     };
 
     return NextResponse.json(userData);

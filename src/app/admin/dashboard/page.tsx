@@ -1,9 +1,22 @@
+"use client";
 import { AdminLayout } from "@/components/layouts/admin-layout";
 import { RidesPerStudentChart, PopularDestinationsChart, CommutePatternsChart } from "@/components/admin/analytics-charts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Users, Car, Route } from "lucide-react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Replace with your actual user fetching logic
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (user.role !== "admin") {
+      router.push("/dashboard"); // Redirect non-admins to student dashboard
+    }
+  }, [router]);
+
   return (
     <AdminLayout>
       <div className="space-y-6">
