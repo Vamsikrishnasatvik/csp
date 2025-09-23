@@ -1,3 +1,4 @@
+
 "use client";
 
 import { usePathname, useRouter } from 'next/navigation';
@@ -64,8 +65,10 @@ export function UserSidebar() {
             <SidebarMenuItem key={item.label}>
                 <Link href={item.href} legacyBehavior={false} passHref>
                     <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.label}>
+                      <>
                         <item.icon />
                         <span>{item.label}</span>
+                      </>
                     </SidebarMenuButton>
                 </Link>
             </SidebarMenuItem>
