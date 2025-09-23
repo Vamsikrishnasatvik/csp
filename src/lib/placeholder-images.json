@@ -1,3 +1,52 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "user-avatar-1",
+      "description": "User avatar of a smiling woman",
+      "imageUrl": "https://images.unsplash.com/photo-1711645169736-53327e726205?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx3b21hbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzU4NTUwODkzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman smiling"
+    },
+    {
+      "id": "user-avatar-2",
+      "description": "User avatar of a man with glasses",
+      "imageUrl": "https://images.unsplash.com/photo-1557862921-37829c790f19?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtYW4lMjBnbGFzc2VzfGVufDB8fHx8MTc1ODU4NDkzN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man glasses"
+    },
+    {
+      "id": "user-avatar-3",
+      "description": "User avatar of a person in a hat",
+      "imageUrl": "https://images.unsplash.com/photo-1641612600068-15dd286869b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cGVyc29uJTIwaGF0fGVufDB8fHx8MTc1ODYwMjI3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person hat"
+    },
+    {
+      "id": "vehicle-1",
+      "description": "A modern sedan car",
+      "imageUrl": "https://images.unsplash.com/photo-1648396418755-6da68302adc9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzZWRhbiUyMGNhcnxlbnwwfHx8fDE3NTg1OTczOTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sedan car"
+    },
+    {
+      "id": "vehicle-2",
+      "description": "A white SUV",
+      "imageUrl": "https://images.unsplash.com/photo-1660825551139-81fd757803ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx3aGl0ZSUyMFNVVnxlbnwwfHx8fDE3NTg2MTQ1Njl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "white SUV"
+    },
+    {
+      "id": "destination-1",
+      "description": "Charminar in Hyderabad",
+      "imageUrl": "https://images.unsplash.com/photo-1671358914441-dacc4f1f7dd6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxDaGFybWluYXIlMjBIeWRlcmFiYWR8ZW58MHx8fHwxNzU4NjExMTQzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "Charminar Hyderabad"
+    },
+    {
+      "id": "destination-2",
+      "description": "A bustling market street in a city",
+      "imageUrl": "https://images.unsplash.com/photo-1669824739095-93db107cfa42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxtYXJrZXQlMjBzdHJlZXR8ZW58MHx8fHwxNzU4NTk3MDIwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "market street"
+    },
+    {
+      "id": "map-placeholder",
+      "description": "A placeholder image of a city map",
+      "imageUrl": "https://images.unsplash.com/photo-1717343823307-973d0903d222?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjaXR5JTIwbWFwfGVufDB8fHx8MTc1ODU4MzIxM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "city map"
+    }
+  ]
 }
