@@ -9,6 +9,7 @@ import { Bus, BusFront, Car, CarTaxiFront, Users, Clock, Wallet, CheckCircle } f
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const icons: { [key: string]: React.ElementType } = {
   Bus, BusFront, Car, CarTaxiFront, Users
@@ -16,6 +17,7 @@ const icons: { [key: string]: React.ElementType } = {
 
 export default function CommutesPage() {
   const { toast } = useToast();
+  const router = useRouter();
   const [filter, setFilter] = useState('all');
 
   const filteredCommutes = filter === 'all' 
@@ -23,6 +25,10 @@ export default function CommutesPage() {
     : mockCommutes.filter(c => c.filter === filter);
 
   const handleBook = (commuteType: string) => {
+    if (commuteType.toLowerCase().includes("rental car")) {
+      router.push("/commutes/rental-cars");
+      return;
+    }
     toast({
         title: "Booking Initiated",
         description: `Your request for the ${commuteType} has been noted.`,
