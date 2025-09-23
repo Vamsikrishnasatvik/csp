@@ -4,31 +4,25 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import Link from "next/link";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 
 const formSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid student email." }),
   password: z.string().min(6, { message: "Password must be at least 6 characters." }),
 });
 
-const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <title>Google</title>
-    <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.02 1.02-2.3 1.84-4.32 1.84-3.6 0-6.5-2.95-6.5-6.5s2.9-6.5 6.5-6.5c1.95 0 3.35.73 4.1 1.5l2.43-2.43C18.4 2.2 15.86 1 12.48 1 7.03 1 3 5.03 3 10.5s4.03 9.5 9.48 9.5c2.7 0 4.9-1.05 6.4-2.43 1.6-1.4 2.3-3.6 2.3-6.1z" />
-  </svg>
-);
-
-export function LoginForm() {
+export function RegistrationForm() {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
@@ -36,24 +30,32 @@ export function LoginForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    // Simulate successful login
-    router.push('/dashboard');
-  }
-
-  function onGoogleLogin() {
-    // Simulate successful Google login
+    // Simulate successful registration
     router.push('/dashboard');
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Student Login</CardTitle>
-        <CardDescription>Enter your student credentials to access the dashboard.</CardDescription>
+        <CardTitle>Register</CardTitle>
+        <CardDescription>Fill in your details to create a student account.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Your full name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"
@@ -81,22 +83,14 @@ export function LoginForm() {
               )}
             />
             <Button type="submit" className="w-full">
-              Login
+              Create Account
             </Button>
           </form>
         </Form>
-        <div className="relative my-6">
-          <Separator />
-          <span className="absolute left-1/2 -translate-x-1/2 -top-3 bg-card px-2 text-sm text-muted-foreground">OR</span>
-        </div>
-        <Button variant="outline" className="w-full" onClick={onGoogleLogin}>
-          <GoogleIcon className="mr-2 h-4 w-4" />
-          Login with Google
-        </Button>
-         <p className="mt-4 text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{' '}
-            <Link href="/register" className="underline underline-offset-4 hover:text-primary">
-                Sign up
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+            Already have an account?{' '}
+            <Link href="/" className="underline underline-offset-4 hover:text-primary">
+                Login
             </Link>
         </p>
       </CardContent>
