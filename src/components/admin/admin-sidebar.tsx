@@ -60,12 +60,6 @@ export function AdminSidebar() {
         <SidebarSeparator />
         <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => router.push('/dashboard')} tooltip="Back to App">
-                    <ArrowLeft />
-                    <span>Back to App</span>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => router.push('/')} tooltip="Logout">
                     <LogOut />
                     <span>Logout</span>

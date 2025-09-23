@@ -79,16 +79,6 @@ export function UserSidebar() {
         <SidebarSeparator />
         <SidebarMenu>
             <SidebarMenuItem>
-                <Link href="/admin/dashboard" passHref>
-                    <SidebarMenuButton asChild tooltip="Admin Panel">
-                        <a>
-                            <Shield />
-                            <span>Admin Panel</span>
-                        </a>
-                    </SidebarMenuButton>
-                </Link>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => router.push('/')} tooltip="Logout">
                     <LogOut />
                     <span>Logout</span>

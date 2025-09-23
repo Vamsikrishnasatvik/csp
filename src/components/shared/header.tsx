@@ -1,8 +1,8 @@
 "use client";
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Bell, LogOut, Settings, User } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Bell, LogOut, Settings, User, Shield, ArrowLeft } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,9 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 
 export function Header() {
     const router = useRouter();
+    const pathname = usePathname();
+    const isAdminView = pathname.startsWith('/admin');
+
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
         <div className="md:hidden">
@@ -55,6 +58,17 @@ export function Header() {
                     <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
+                {isAdminView ? (
+                    <DropdownMenuItem onClick={() => router.push('/dashboard')}>
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        <span>Switch to Student</span>
+                    </DropdownMenuItem>
+                ) : (
+                    <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>
+                        <Shield className="mr-2 h-4 w-4" />
+                        <span>Switch to Admin</span>
+                    </DropdownMenuItem>
+                )}
                 <DropdownMenuItem onClick={() => router.push('/')}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
