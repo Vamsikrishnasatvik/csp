@@ -1,16 +1,73 @@
-import { redirect } from 'next/navigation';
+"use client";
+import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { UserLayout } from "@/components/layouts/user-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SmartRecommendations } from "@/components/user/smart-recommendations";
-import { getCurrentUser } from "@/lib/auth";
 import { DollarSign, Route, Users } from "lucide-react";
 
-export default async function DashboardPage() {
-  const user = await getCurrentUser();
+type User = {
+  _id: string;
+  name: string;
+  trips?: {
+    upcoming?: number;
+    nextDestination?: string;
+  };
+  totalSaved?: number;
+  carpoolRequests?: {
+    pending?: number;
+  };
+};
 
-  if (!user) {
-    redirect('/');
-  }
+export default function DashboardPage() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const wsRef = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      router.push("/");
+      return;
+    }
+
+    fetch(`/api/user/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        setUser(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        router.push("/");
+        setLoading(false);
+      });
+
+    const role = localStorage.getItem("role");
+    if (role && userId) {
+      const ws = new WebSocket(`ws://localhost:8000/ws/${role}/${userId}`);
+      wsRef.current = ws;
+
+      ws.onopen = () => {
+        console.log("WebSocket connected");
+        ws.send("Hello from frontend!");
+      };
+
+      ws.onmessage = (event) => {
+        console.log("Received:", event.data);
+      };
+
+      ws.onclose = () => {
+        console.log("WebSocket closed");
+      };
+
+      return () => {
+        ws.close();
+      };
+    }
+  }, [router]);
+
+  if (loading || !user) return null;
 
   return (
     <UserLayout>
@@ -23,7 +80,6 @@ export default async function DashboardPage() {
             Here's your commute overview for this weekend.
           </p>
         </div>
-        
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -58,9 +114,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-
         <SmartRecommendations userId={user._id} />
-
       </div>
     </UserLayout>
   );

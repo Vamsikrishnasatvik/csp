@@ -68,6 +68,7 @@ export function LoginForm({ userType }: LoginFormProps) {
       // Save role to localStorage for navigation
       if (typeof window !== "undefined") {
         localStorage.setItem("role", data.role);
+        localStorage.setItem("userId", data.id);
       }
 
       toast({
