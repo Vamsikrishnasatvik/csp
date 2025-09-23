@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,8 +20,12 @@ const formSchema = z.object({
 
 export function RegistrationForm() {
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
 
-  // Make sure useForm is only initialized on the client
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,6 +40,10 @@ export function RegistrationForm() {
     router.push("/dashboard");
   };
 
+  if (!isClient) {
+    return null; // or a loading skeleton
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -44,32 +53,49 @@ export function RegistrationForm() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {["name", "email", "password"].map((fieldName) => (
-              <FormField
-                key={fieldName}
-                control={form.control}
-                name={fieldName as keyof typeof formSchema["_type"]}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{fieldName === "name" ? "Full Name" : fieldName === "email" ? "Email" : "Password"}</FormLabel>
-                    <FormControl>
-                      <Input
-                        type={fieldName === "password" ? "password" : "text"}
-                        placeholder={
-                          fieldName === "name"
-                            ? "Your full name"
-                            : fieldName === "email"
-                            ? "name@example.com"
-                            : "••••••••"
-                        }
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Your full name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="name@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="••••••••"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button type="submit" className="w-full">
               Create Account
             </Button>
