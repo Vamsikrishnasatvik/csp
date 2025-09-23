@@ -63,12 +63,12 @@ export function UserSidebar() {
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.label}>
-                <Link href={item.href} legacyBehavior={false} passHref>
+                <Link href={item.href} passHref>
                     <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.label}>
-                      <>
+                      <a>
                         <item.icon />
                         <span>{item.label}</span>
-                      </>
+                      </a>
                     </SidebarMenuButton>
                 </Link>
             </SidebarMenuItem>
@@ -79,10 +79,12 @@ export function UserSidebar() {
         <SidebarSeparator />
         <SidebarMenu>
             <SidebarMenuItem>
-                <Link href="/admin/dashboard" legacyBehavior={false} passHref>
-                    <SidebarMenuButton tooltip="Admin Panel">
-                        <Shield />
-                        <span>Admin Panel</span>
+                <Link href="/admin/dashboard" passHref>
+                    <SidebarMenuButton asChild tooltip="Admin Panel">
+                        <a>
+                            <Shield />
+                            <span>Admin Panel</span>
+                        </a>
                     </SidebarMenuButton>
                 </Link>
             </SidebarMenuItem>
