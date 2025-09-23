@@ -1,5 +1,11 @@
 import { Bus } from 'lucide-react';
-import { RegistrationForm } from '@/components/auth/registration-form';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const RegistrationForm = dynamic(() => import('@/components/auth/registration-form').then(mod => mod.RegistrationForm), { 
+    ssr: false,
+    loading: () => <Skeleton className="h-[450px] w-full" />,
+});
 
 export default function RegisterPage() {
   return (
