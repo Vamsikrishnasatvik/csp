@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Bus, LayoutDashboard, User, Car, Map, BookOpen, Route, LogOut } from 'lucide-react';
+import { Bus, LayoutDashboard, User, Car, Map, BookOpen, Route, LogOut, Shield } from 'lucide-react';
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -62,14 +62,12 @@ export function UserSidebar() {
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.label}>
-              <Link href={item.href} legacyBehavior passHref>
-                <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.label}>
-                  <a>
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </a>
-                </SidebarMenuButton>
-              </Link>
+                <Link href={item.href} legacyBehavior={false} passHref>
+                    <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.label}>
+                        <item.icon />
+                        <span>{item.label}</span>
+                    </SidebarMenuButton>
+                </Link>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
@@ -77,6 +75,14 @@ export function UserSidebar() {
       <SidebarFooter className="p-2">
         <SidebarSeparator />
         <SidebarMenu>
+            <SidebarMenuItem>
+                <Link href="/admin/dashboard" legacyBehavior={false} passHref>
+                    <SidebarMenuButton tooltip="Admin Panel">
+                        <Shield />
+                        <span>Admin Panel</span>
+                    </SidebarMenuButton>
+                </Link>
+            </SidebarMenuItem>
             <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => router.push('/')} tooltip="Logout">
                     <LogOut />
