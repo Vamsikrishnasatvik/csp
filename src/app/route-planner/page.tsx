@@ -61,17 +61,17 @@ export default function RoutePlannerPage() {
                     </div>
                     <div className="lg:col-span-2">
                         <Card className="overflow-hidden">
-                            {mapPlaceholder && (
-                                <div className="aspect-[4/3] relative bg-muted">
-                                    <Image 
-                                        src={mapPlaceholder.imageUrl} 
-                                        alt={mapPlaceholder.description}
-                                        fill
-                                        className="object-cover"
-                                        data-ai-hint={mapPlaceholder.imageHint}
-                                    />
-                                </div>
-                            )}
+                            <section className="hidden lg:block flex-shrink-0 w-[700px] h-[500px] relative">
+                                <iframe
+                                    title="Map"
+                                    width="100%"
+                                    height="100%"
+                                    style={{ borderRadius: "1rem", border: "1px solid #e5e7eb" }}
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.217393698736!2d78.3566720750737!3d17.18987798364659!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb93e2e2e2e2e2%3A0x2e2e2e2e2e2e2e2e!2sWoxsen%20University!5e0!3m2!1sen!2sin!4v1695555555555!5m2!1sen!2sin"
+                                    allowFullScreen
+                                    loading="lazy"
+                                ></iframe>
+                                </section> 
                             <CardContent className="p-4 bg-secondary/50">
                                 <div className="flex items-center justify-center gap-4 text-sm font-medium">
                                     <div className="flex items-center gap-2">

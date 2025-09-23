@@ -34,6 +34,11 @@ export default function CommutesPage() {
       router.push("/carpools");
       return;
     }
+
+    if (commuteType.toLowerCase().includes("book vehicle")) {
+      router.push("/commutes/choose-ride");
+      return;
+    }
     toast({
         title: "Booking Initiated",
         description: `Your request for the ${commuteType} has been noted.`,
