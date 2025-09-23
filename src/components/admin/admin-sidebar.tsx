@@ -12,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Bus, LayoutDashboard, Users, Car, Map, Bell, BarChart, LogOut, ArrowLeft } from 'lucide-react';
+import { Bus, LayoutDashboard, Users, Car, Map, Bell, BarChart, LogOut } from 'lucide-react';
 
 const adminMenuItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: BarChart },
@@ -44,12 +44,10 @@ export function AdminSidebar() {
         <SidebarMenu>
           {adminMenuItems.map((item) => (
             <SidebarMenuItem key={item.label}>
-              <Link href={item.href} passHref>
-                <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.label}>
-                  <a>
+              <Link href={item.href}>
+                <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label}>
                     <item.icon />
                     <span>{item.label}</span>
-                  </a>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>

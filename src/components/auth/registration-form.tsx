@@ -87,6 +87,7 @@ export function RegistrationForm() {
               )}
             />
             <Button type="submit" className="w-full">
+              <button>HI</button>
               Create Account
             </Button>
           </form>

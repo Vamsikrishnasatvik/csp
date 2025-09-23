@@ -12,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Bus, LayoutDashboard, User, Car, Map, BookOpen, Route, LogOut, Shield } from 'lucide-react';
+import { Bus, LayoutDashboard, User, Car, BookOpen, Route, LogOut } from 'lucide-react';
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -63,12 +63,10 @@ export function UserSidebar() {
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.label}>
-                <Link href={item.href} passHref>
-                    <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.label}>
-                      <a>
+                <Link href={item.href}>
+                    <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label}>
                         <item.icon />
                         <span>{item.label}</span>
-                      </a>
                     </SidebarMenuButton>
                 </Link>
             </SidebarMenuItem>
