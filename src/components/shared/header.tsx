@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 
 export function Header() {
     const router = useRouter();
@@ -23,9 +24,32 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-        <div className="md:hidden">
-            <SidebarTrigger />
+        <div className="flex items-center gap-6">
+            <div className="md:hidden">
+                <SidebarTrigger />
+            </div>
+            <nav className="hidden md:flex md:items-center md:gap-6 text-sm font-medium">
+                <Link
+                    href="/dashboard"
+                    className={cn(
+                        "transition-colors hover:text-foreground",
+                        isAdminView ? "text-muted-foreground" : ""
+                    )}
+                >
+                    Student
+                </Link>
+                <Link
+                    href="/admin/dashboard"
+                    className={cn(
+                        "transition-colors hover:text-foreground",
+                        !isAdminView ? "text-muted-foreground" : ""
+                    )}
+                >
+                    Admin
+                </Link>
+            </nav>
         </div>
+
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
             <div className="ml-auto flex-1 sm:flex-initial">
                 {/* Future search bar can go here */}
@@ -58,17 +82,6 @@ export function Header() {
                     <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                {isAdminView ? (
-                    <DropdownMenuItem onClick={() => router.push('/dashboard')}>
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        <span>Switch to Student</span>
-                    </DropdownMenuItem>
-                ) : (
-                    <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>
-                        <Shield className="mr-2 h-4 w-4" />
-                        <span>Switch to Admin</span>
-                    </DropdownMenuItem>
-                )}
                 <DropdownMenuItem onClick={() => router.push('/')}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
