@@ -4,6 +4,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -26,6 +27,7 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 interface ProfileFormProps {
   user: {
+    _id: string; // Add this line
     name: string;
     email: string;
     year: string;
@@ -39,26 +41,106 @@ interface ProfileFormProps {
 }
 
 export function ProfileForm({ user }: ProfileFormProps) {
-    const { toast } = useToast();
-    const form = useForm<ProfileFormValues>({
-        resolver: zodResolver(profileFormSchema),
-        defaultValues: {
-            name: user.name,
-            email: user.email,
-            year: user.year,
-            department: user.department,
-            carpoolPreference: user.carpoolPreference,
-            vehicleModel: user.vehicleDetails?.model || "",
-            vehiclePlate: user.vehicleDetails?.plateNumber || "",
-        },
-    });
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
-  function onSubmit(data: ProfileFormValues) {
-    console.log("Profile updated:", data);
-    toast({
-      title: "Profile Updated",
-      description: "Your information has been successfully saved.",
-    });
+  // Initialize form with user data
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: {
+      name: user.name,
+      email: user.email,
+      year: user.year,
+      department: user.department,
+      carpoolPreference: user.carpoolPreference,
+      vehicleModel: user.vehicleDetails?.model || "",
+      vehiclePlate: user.vehicleDetails?.plateNumber || "",
+    },
+  });
+
+  // Fetch latest user data
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const response = await fetch(`/api/user/profile?userId=${user._id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch profile');
+        }
+        
+        const userData = await response.json();
+        
+        // Update form with fresh data
+        form.reset({
+          name: userData.name,
+          email: userData.email,
+          year: userData.year,
+          department: userData.department,
+          carpoolPreference: userData.carpoolPreference,
+          vehicleModel: userData.vehicleDetails?.model || "",
+          vehiclePlate: userData.vehicleDetails?.plateNumber || "",
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load profile data",
+          variant: "destructive",
+        });
+      } finally {
+        setIsFetching(false);
+      }
+    }
+
+    fetchUserData();
+  }, [user._id, form, toast]);
+
+  async function onSubmit(data: ProfileFormValues) {
+    try {
+      setIsLoading(true);
+      console.log('Submitting data:', data); // Debug log
+
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user._id,
+          ...data,
+        }),
+      });
+
+      const responseData = await response.json();
+      console.log('Response:', responseData); // Debug log
+
+      if (!response.ok) {
+        throw new Error(responseData.error || 'Failed to update profile');
+      }
+
+      // Update form with new data
+      form.reset({
+        ...data,
+        email: responseData.user.email, // Keep email readonly
+      });
+
+      toast({
+        title: "Success",
+        description: "Your profile has been updated",
+      });
+    } catch (error) {
+      console.error('Update error:', error); // Debug log
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to update profile",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (isFetching) {
+    return <div>Loading profile...</div>;
   }
 
   return (
@@ -176,7 +258,9 @@ export function ProfileForm({ user }: ProfileFormProps) {
             </div>
         </div>
 
-        <Button type="submit">Save Changes</Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Saving..." : "Save Changes"}
+        </Button>
       </form>
     </Form>
   );

@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useState } from "react"; // Add this import
+import { toast } from "@/hooks/use-toast"; // Add this import
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,6 +21,7 @@ const formSchema = z.object({
 
 export function RegistrationForm() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -29,9 +32,42 @@ export function RegistrationForm() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-    router.push("/dashboard");
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error);
+      }
+
+      // Show success message
+      toast({
+        title: "Account created successfully!",
+        description: "Redirecting to login...",
+      });
+
+      // Redirect to login page after successful registration
+      router.push("/dashboard");
+    } catch (error) {
+      // Show error message
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Something went wrong",
+        variant: "destructive",
+      });
+      console.error('Registration failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -86,8 +122,12 @@ export function RegistrationForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
-              Create Account
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>Creating account...</>
+              ) : (
+                <>Create Account</>
+              )}
             </Button>
           </form>
         </Form>

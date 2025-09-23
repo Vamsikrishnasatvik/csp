@@ -1,4 +1,3 @@
-
 "use client";
 
 import { z } from "zod";
@@ -7,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Shield, User } from "lucide-react";
+import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -32,6 +33,8 @@ interface LoginFormProps {
 
 export function LoginForm({ userType }: LoginFormProps) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,10 +46,42 @@ export function LoginForm({ userType }: LoginFormProps) {
 
   const isStudent = userType === 'student';
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    const destination = isStudent ? '/dashboard' : '/admin/dashboard';
-    router.push(destination);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error);
+      }
+
+      toast({
+        title: "Login successful!",
+        description: "Redirecting to dashboard...",
+      });
+
+      // Redirect based on user role
+      const destination = data.role === 'admin' ? '/admin/dashboard' : '/dashboard';
+      router.push(destination);
+      
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Login failed",
+        variant: "destructive",
+      });
+      console.error('Login failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   function onGoogleLogin() {
@@ -114,8 +149,12 @@ export function LoginForm({ userType }: LoginFormProps) {
             </Link>
           </div>
 
-          <Button type="submit" className="w-full">
-            Login as {isStudent ? 'Student' : 'Admin'}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <>Logging in...</>
+            ) : (
+              <>Login as {isStudent ? 'Student' : 'Admin'}</>
+            )}
           </Button>
         </form>
       </Form>

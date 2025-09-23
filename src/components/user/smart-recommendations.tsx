@@ -26,7 +26,7 @@ const formSchema = z.object({
   carpoolPreference: z.boolean().default(false),
 });
 
-export function SmartRecommendations() {
+export function SmartRecommendations({ userId }: { userId: any }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [recommendations, setRecommendations] = useState<SmartCommuteRecommendationsOutput['recommendations'] | null>(null);
