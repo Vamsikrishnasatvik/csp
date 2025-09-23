@@ -11,8 +11,8 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     // Replace with your actual user fetching logic
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    if (user.role !== "admin") {
+    const user = localStorage.getItem("role")
+    if (user !== "admin") {
       router.push("/dashboard"); // Redirect non-admins to student dashboard
     }
   }, [router]);
