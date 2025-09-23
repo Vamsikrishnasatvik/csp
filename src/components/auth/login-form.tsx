@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Shield, User } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,11 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export function LoginForm() {
+interface LoginFormProps {
+  userType: 'student' | 'admin';
+}
+
+export function LoginForm({ userType }: LoginFormProps) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,22 +39,27 @@ export function LoginForm() {
     },
   });
 
+  const isStudent = userType === 'student';
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    // Simulate successful login
-    router.push('/dashboard');
+    const destination = isStudent ? '/dashboard' : '/admin/dashboard';
+    router.push(destination);
   }
 
   function onGoogleLogin() {
-    // Simulate successful Google login
-    router.push('/dashboard');
+    const destination = isStudent ? '/dashboard' : '/admin/dashboard';
+    router.push(destination);
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Student Login</CardTitle>
-        <CardDescription>Enter your credentials to access the dashboard.</CardDescription>
+        <div className="flex items-center gap-2">
+            {isStudent ? <User className="h-6 w-6"/> : <Shield className="h-6 w-6"/>}
+            <CardTitle>{isStudent ? 'Student Login' : 'Admin Login'}</CardTitle>
+        </div>
+        <CardDescription>Enter your credentials to access the {userType} panel.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -81,7 +91,7 @@ export function LoginForm() {
               )}
             />
             <Button type="submit" className="w-full">
-              Login
+              Login as {isStudent ? 'Student' : 'Admin'}
             </Button>
           </form>
         </Form>
@@ -93,12 +103,14 @@ export function LoginForm() {
           <GoogleIcon className="mr-2 h-4 w-4" />
           Login with Google
         </Button>
-         <p className="mt-4 text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{' '}
-            <Link href="/register" className="underline underline-offset-4 hover:text-primary">
-                Sign up
-            </Link>
-        </p>
+         {isStudent && (
+            <p className="mt-4 text-center text-sm text-muted-foreground">
+                Don&apos;t have an account?{' '}
+                <Link href="/register" className="underline underline-offset-4 hover:text-primary">
+                    Sign up
+                </Link>
+            </p>
+         )}
       </CardContent>
     </Card>
   );
