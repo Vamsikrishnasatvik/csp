@@ -76,12 +76,12 @@ export function UserSidebar() {
       </SidebarContent>
       <SidebarFooter className="p-2">
         <SidebarSeparator />
-        <SidebarMenu>
-            <SidebarMenuItem>
+        <SidebarMenu >
+            <SidebarMenuItem >
                 <SidebarMenuButton onClick={() => router.push('/')} tooltip="Logout">
                      <Button
                       
-                        className="w-full flex items-center gap-2"
+                        className="w-full items-center gap-2"
                         onClick={() => {
                           if (typeof window !== "undefined") {
                             localStorage.clear();
