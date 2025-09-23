@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 
 const formSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid student email." }),
+  email: z.string().email({ message: "Please enter a valid email." }),
   password: z.string().min(6, { message: "Password must be at least 6 characters." }),
 });
 
@@ -49,7 +49,7 @@ export function LoginForm() {
     <Card>
       <CardHeader>
         <CardTitle>Student Login</CardTitle>
-        <CardDescription>Enter your student credentials to access the dashboard.</CardDescription>
+        <CardDescription>Enter your credentials to access the dashboard.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -59,9 +59,9 @@ export function LoginForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Student Email</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="name@woxsen.edu.in" {...field} />
+                    <Input placeholder="name@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -1,7 +1,7 @@
 export const mockUser = {
   userId: 'user-123',
   name: 'Alex Doe',
-  email: 'alex.doe@woxsen.edu.in',
+  email: 'alex.doe@example.com',
   year: '3rd Year',
   department: 'Computer Science',
   vehicleDetails: {
@@ -12,9 +12,9 @@ export const mockUser = {
 };
 
 export const mockUsers = [
-  { userId: 'user-1', name: 'Priya Sharma', email: 'priya.s@woxsen.edu.in', year: '2nd Year', department: 'BBA', carpoolPreference: true },
-  { userId: 'user-2', name: 'Rohan Verma', email: 'rohan.v@woxsen.edu.in', year: '4th Year', department: 'B.Tech CSE', carpoolPreference: false },
-  { userId: 'user-3', name: 'Anjali Mehta', email: 'anjali.m@woxsen.edu.in', year: '1st Year', department: 'Design', carpoolPreference: true },
+  { userId: 'user-1', name: 'Priya Sharma', email: 'priya.s@example.com', year: '2nd Year', department: 'BBA', carpoolPreference: true },
+  { userId: 'user-2', name: 'Rohan Verma', email: 'rohan.v@example.com', year: '4th Year', department: 'B.Tech CSE', carpoolPreference: false },
+  { userId: 'user-3', name: 'Anjali Mehta', email: 'anjali.m@example.com', year: '1st Year', department: 'Design', carpoolPreference: true },
 ];
 
 

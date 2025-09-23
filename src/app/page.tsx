@@ -10,7 +10,7 @@ export default function Home() {
             <Bus className="h-10 w-10" />
           </div>
           <h1 className="text-3xl font-bold text-center">SmartCommute</h1>
-          <p className="text-muted-foreground text-center">Woxsen University Student Commute Planner</p>
+          <p className="text-muted-foreground text-center">Commute Planner</p>
         </div>
         <LoginForm />
       </div>

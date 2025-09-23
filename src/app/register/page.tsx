@@ -10,7 +10,7 @@ export default function RegisterPage() {
             <Bus className="h-10 w-10" />
           </div>
           <h1 className="text-3xl font-bold text-center">Create Account</h1>
-          <p className="text-muted-foreground text-center">Join the SmartCommute platform at Woxsen University.</p>
+          <p className="text-muted-foreground text-center">Join the SmartCommute platform.</p>
         </div>
         <RegistrationForm />
       </div>
