@@ -29,6 +29,11 @@ export default function CommutesPage() {
       router.push("/commutes/rental-cars");
       return;
     }
+
+    if (commuteType.toLowerCase().includes("carpool")) {
+      router.push("/carpools");
+      return;
+    }
     toast({
         title: "Booking Initiated",
         description: `Your request for the ${commuteType} has been noted.`,
@@ -53,36 +58,41 @@ export default function CommutesPage() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredCommutes.map((commute) => {
             const Icon = icons[commute.icon];
+            const isCarpool = commute.type.toLowerCase() === "carpool";
             return (
               <Card key={commute.commuteId}>
                 <CardHeader>
-                    <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-4">
-                            {Icon && <Icon className="h-8 w-8 text-primary" />}
-                            <div>
-                                <CardTitle>{commute.type}</CardTitle>
-                                <CardDescription>{commute.routeDetails}</CardDescription>
-                            </div>
-                        </div>
-                        <Badge variant={
-                            commute.filter === 'fastest' ? 'default' : 
-                            commute.filter === 'cheapest' ? 'secondary' : 'outline'
-                        }>{commute.filter}</Badge>
+                  <div className="flex justify-between items-start">
+                    <div className="flex items-center gap-4">
+                      {Icon && <Icon className="h-8 w-8 text-primary" />}
+                      <div>
+                        <CardTitle>{commute.type}</CardTitle>
+                        {!isCarpool && <CardDescription>{commute.routeDetails}</CardDescription>}
+                      </div>
                     </div>
+                    <Badge variant={
+                      commute.filter === 'fastest' ? 'default' : 
+                      commute.filter === 'cheapest' ? 'secondary' : 'outline'
+                    }>{commute.filter}</Badge>
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex justify-between items-center text-sm border-t pt-4">
-                    <span className="flex items-center gap-2 text-muted-foreground"><Clock className="h-4 w-4"/> Departure</span>
-                    <span>{commute.departureTime}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="flex items-center gap-2 text-muted-foreground"><Wallet className="h-4 w-4"/> Cost</span>
-                    <span className="font-semibold">₹{commute.costEstimate}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="flex items-center gap-2 text-muted-foreground"><Users className="h-4 w-4"/> Seats Left</span>
-                    <span>{commute.availableSeats}</span>
-                  </div>
+                  {!isCarpool && (
+                    <>
+                      <div className="flex justify-between items-center text-sm border-t pt-4">
+                        <span className="flex items-center gap-2 text-muted-foreground"><Clock className="h-4 w-4"/> Departure</span>
+                        <span>{commute.departureTime}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="flex items-center gap-2 text-muted-foreground"><Wallet className="h-4 w-4"/> Cost</span>
+                        <span className="font-semibold">₹{commute.costEstimate}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="flex items-center gap-2 text-muted-foreground"><Users className="h-4 w-4"/> Seats Left</span>
+                        <span>{commute.availableSeats}</span>
+                      </div>
+                    </>
+                  )}
                   <Button className="w-full mt-2" onClick={() => handleBook(commute.type)}>
                     Book Now
                   </Button>

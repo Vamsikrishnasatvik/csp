@@ -46,8 +46,7 @@ export const mockCommutes = [
     },
     {
         commuteId: 'car-1',
-        type: 'Personal Vehicle',
-        routeDetails: 'Campus to Gachibowli',
+        type: 'Book Vehicle',
         costEstimate: 800,
         departureTime: 'Flexi Time',
         availableSeats: 4,
@@ -67,10 +66,7 @@ export const mockCommutes = [
     {
         commuteId: 'carpool-1',
         type: 'Carpool',
-        routeDetails: 'Campus to Hitech City',
-        costEstimate: 250,
-        departureTime: '05:00 PM, Fri',
-        availableSeats: 2,
+        
         filter: 'eco-friendly',
         icon: 'Users'
     },

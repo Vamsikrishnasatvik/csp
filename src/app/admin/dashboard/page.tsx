@@ -3,11 +3,27 @@ import { AdminLayout } from "@/components/layouts/admin-layout";
 import { RidesPerStudentChart, PopularDestinationsChart, CommutePatternsChart } from "@/components/admin/analytics-charts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Users, Car, Route } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSocket } from "@/context/SocketContext";
+
+type User = {
+  _id: string;
+  name: string;
+  trips?: {
+    upcoming?: number;
+    nextDestination?: string;
+  };
+  totalSaved?: number;
+  carpoolRequests?: {
+    pending?: number;
+  };
+};
 
 export default function AdminDashboardPage() {
   const router = useRouter();
+
+  const { ws, sendMessage, user, loading } = useSocket();
 
   useEffect(() => {
     // Replace with your actual user fetching logic
@@ -15,7 +31,10 @@ export default function AdminDashboardPage() {
     if (user !== "admin") {
       router.push("/dashboard"); // Redirect non-admins to student dashboard
     }
-  }, [router]);
+    if (!ws) return;
+    ws.onmessage = (event) => console.log("Message:", event.data);
+    
+  }, [router,ws]);
 
   return (
     <AdminLayout>

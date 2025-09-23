@@ -16,6 +16,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
+import { useSocket } from "@/context/SocketContext";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useState } from "react";
 
 export function Header() {
     const router = useRouter();
@@ -26,6 +29,14 @@ export function Header() {
     if (typeof window !== "undefined") {
         role = localStorage.getItem("role") || "user";
     }
+
+    const { notifications, unread, markRead } = useSocket();
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+        markRead();
+    };
 
     return (
         <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -57,10 +68,40 @@ export function Header() {
                 <div className="ml-auto flex-1 sm:flex-initial">
                     {/* Future search bar can go here */}
                 </div>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                    <Bell className="h-5 w-5" />
-                    <span className="sr-only">Toggle notifications</span>
-                </Button>
+
+                <button onClick={handleOpen} style={{ position: "relative" }}>
+                <Bell size={20} />
+                {unread && (
+                    <span style={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        width: 10,
+                        height: 10,
+                        background: "red",
+                        borderRadius: "50%",
+                    }} />
+                )}
+            </button>
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Notifications</DialogTitle>
+                    </DialogHeader>
+                    <ul className="space-y-2">
+                        {notifications.map((msg, idx) => (
+                            <li
+                            key={idx}
+                            className="flex items-center p-3 bg-white rounded-lg shadow hover:bg-gray-50 transition"
+                            >
+                            <span className="flex-shrink-0 w-3 h-3 mr-3 rounded-full bg-blue-500 animate-pulse"></span>
+                            <p className="text-gray-800">{msg}</p>
+                            </li>
+                        ))}
+                    </ul>
+                </DialogContent>
+            </Dialog>
+                
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                     <Button variant="secondary" size="icon" className="rounded-full">
@@ -92,6 +133,7 @@ export function Header() {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
+            
         </header>
     );
 }
