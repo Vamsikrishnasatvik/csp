@@ -3,6 +3,7 @@
 import { UserLayout } from "@/components/layouts/user-layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 // Example data, replace image URLs with your own or use placeholder images
 const availableCars = [
@@ -12,6 +13,8 @@ const availableCars = [
 ];
 
 export default function RentalCarsPage() {
+  const router = useRouter();
+
   return (
     <UserLayout>
       <div className="space-y-6">
@@ -33,7 +36,12 @@ export default function RentalCarsPage() {
                   <span>Seats: {car.seats}</span>
                   <span className="font-semibold">₹{car.price}</span>
                 </div>
-                <Button className="w-full">Select</Button>
+                <Button
+                  className="w-full"
+                  onClick={() => router.push(`/commutes/rental-cars/owner?type=${car.name}&id=${car.id}`)}
+                >
+                  Select
+                </Button>
               </CardContent>
             </Card>
           ))}

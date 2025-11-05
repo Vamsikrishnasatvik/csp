@@ -53,7 +53,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
     };
     ws.onclose = () => console.log("WebSocket closed");
-    ws.onerror = (err) => console.error("WebSocket error:", err);
+    ws.onerror = (event) => console.error("WebSocket error:", event);
 
     return () => {
       ws.close();

@@ -10,15 +10,38 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Car, ArrowRight, MapPin } from "lucide-react";
+import { Car, ArrowRight, MapPin, Bike, Train } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import Openrouteservice from "openrouteservice-js";
 
 // Dynamically import the map component to avoid SSR issues
 const MapClient = dynamic(() => import("@/components/MapClient"), { ssr: false });
 
+const travelOptions = [
+  {
+    key: "car",
+    label: "Car",
+    icon: <Car className="h-6 w-6" />,
+    costPerKm: 12,
+  },
+  {
+    key: "bike",
+    label: "Bike",
+    icon: <Bike className="h-6 w-6" />,
+    costPerKm: 5,
+  },
+  {
+    key: "train",
+    label: "Train",
+    icon: <Train className="h-6 w-6" />,
+    costPerKm: 8,
+  },
+];
+
 export default function RoutePlannerPage() {
   const orsClientRef = useRef<any>(null);
+  const router = useRouter();
 
   const [startCoords, setStartCoords] = useState<[number, number] | null>(null);
   const [destination, setDestination] = useState("");
@@ -28,6 +51,8 @@ export default function RoutePlannerPage() {
   const [startAddress, setStartAddress] = useState("Fetching current location…");
   const [distanceText, setDistanceText] = useState<string>("");
   const [durationText, setDurationText] = useState<string>("");
+  const [travelMode, setTravelMode] = useState<"car" | "bike" | "foot" | "train">("car");
+  const [routeReady, setRouteReady] = useState(false);
 
   // Initialize ORS client
   useEffect(() => {
@@ -64,7 +89,7 @@ export default function RoutePlannerPage() {
   const geocodeDestination = async (address: string) => {
     if (!address.trim()) return null;
     try {
-      const resp = await fetch(`http://localhost:9002/api/geocode?address=${encodeURIComponent(address)}`);
+      const resp = await fetch(`/api/geocode?address=${encodeURIComponent(address)}`);
       if (!resp.ok) throw new Error("Geocoding API error");
       const geoResp = await resp.json();
       if (!geoResp.features || !geoResp.features[0]) return null;
@@ -76,7 +101,8 @@ export default function RoutePlannerPage() {
     }
   };
 
-  const handleFindRoute = async () => {
+  const handleShowRoute = async () => {
+    setRouteReady(false);
     if (!startCoords) {
       console.warn("Start coordinates not available yet");
       return;
@@ -97,10 +123,26 @@ export default function RoutePlannerPage() {
       return;
     }
 
+    // Handle train as a placeholder
+    if (travelMode === "train") {
+      setRouteGeoJSON(null);
+      setDistanceText("—");
+      setDurationText("Train route not supported");
+      setRouteReady(true);
+      return;
+    }
+
+    // Map travelMode to ORS profile
+    const profileMap: Record<string, string> = {
+      car: "driving-car",
+      bike: "cycling-regular",
+      foot: "foot-walking"
+    };
+
     try {
       const response = await orsClientRef.current.calculate({
         coordinates: [startCoords, coords],
-        profile: "driving-car",
+        profile: profileMap[travelMode],
         format: "geojson"
       });
       const geojsonFeature = (response as any).features[0];
@@ -110,11 +152,18 @@ export default function RoutePlannerPage() {
       const dur = summary.duration;
       setDistanceText(`${(dist / 1000).toFixed(1)} km`);
       setDurationText(`${Math.floor(dur / 60)} min`);
+      setRouteReady(true);
     } catch (err) {
       console.error("Routing error:", err);
       setDistanceText("");
       setDurationText("");
     }
+  };
+
+  const handleConfirmRide = () => {
+    router.push(
+      `/rider-confirmed?pickup=${encodeURIComponent(JSON.stringify(startCoords))}&dest=${encodeURIComponent(JSON.stringify(destCoords))}`
+    );
   };
 
   return (
@@ -148,30 +197,48 @@ export default function RoutePlannerPage() {
                     onChange={e => setDestination(e.target.value)}
                   />
                 </div>
-                <Button className="w-full" onClick={handleFindRoute}>
-                  <MapPin className="mr-2 h-4 w-4" />
-                  Find Route
-                </Button>
                 <Separator className="my-4"/>
-                <div className="space-y-4 text-sm">
-                  <h3 className="font-semibold">Route Details</h3>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Distance</span>
-                    <span>{distanceText || "—"}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Estimated Time</span>
-                    <span>{durationText || "—"}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Estimated Cost</span>
-                    <span>
-                      {distanceText
-                        ? `₹ ${Math.round(parseFloat(distanceText.replace(" km","")) * 12)}`
-                        : "—"}
-                    </span>
+                <div className="space-y-2">
+                  <Label>Choose Travel Option</Label>
+                  <div className="space-y-2">
+                    {travelOptions.map(opt => (
+                      <div
+                        key={opt.key}
+                        className={`flex items-center justify-between p-3 rounded cursor-pointer border ${travelMode === opt.key ? "bg-blue-100 border-blue-500" : "bg-white border-gray-200"}`}
+                        onClick={() => setTravelMode(opt.key as any)}
+                      >
+                        <div className="flex items-center gap-3">
+                          {opt.icon}
+                          <span className="font-medium">{opt.label}</span>
+                        </div>
+                        <div className="text-right">
+                          <div>
+                            {distanceText && opt.costPerKm > 0
+                              ? `₹ ${Math.round(parseFloat(distanceText.replace(" km","")) * opt.costPerKm)}`
+                              : opt.costPerKm === 0 ? "Free" : "—"}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {travelMode === "train" && opt.key === "train"
+                              ? "Train route not supported"
+                              : durationText || "—"}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
+                <Button className="w-full mt-4" onClick={handleShowRoute}>
+                  <MapPin className="mr-2 h-4 w-4" />
+                  Show Route
+                </Button>
+                <Button
+                  className="w-full mt-2"
+                  onClick={handleConfirmRide}
+                  disabled={!routeReady}
+                >
+                  <ArrowRight className="mr-2 h-4 w-4" />
+                  Confirm {travelOptions.find(opt => opt.key === travelMode)?.label}
+                </Button>
               </CardContent>
             </Card>
           </div>
@@ -181,6 +248,7 @@ export default function RoutePlannerPage() {
                 startCoords={startCoords}
                 destCoords={destCoords}
                 routeGeoJSON={routeGeoJSON}
+                riderMode={true}
               />
             </Card>
           </div>

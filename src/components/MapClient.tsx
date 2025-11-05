@@ -7,7 +7,8 @@ import "leaflet/dist/leaflet.css";
 interface MapClientProps {
   startCoords: [number, number] | null;
   destCoords: [number, number] | null;
-  routeGeoJSON: any | null;
+  routeGeoJSON: any;
+  riderMode?: boolean;
 }
 
 export default function MapClient({ startCoords, destCoords, routeGeoJSON }: MapClientProps) {

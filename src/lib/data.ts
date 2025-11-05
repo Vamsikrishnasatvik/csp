@@ -47,9 +47,7 @@ export const mockCommutes = [
     {
         commuteId: 'car-1',
         type: 'Book Vehicle',
-        costEstimate: 800,
-        departureTime: 'Flexi Time',
-        availableSeats: 4,
+        departureTime: 'As per booking',
         filter: 'fastest',
         icon: 'Car'
     },

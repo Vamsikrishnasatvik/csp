@@ -36,7 +36,7 @@ export default function CommutesPage() {
     }
 
     if (commuteType.toLowerCase().includes("book vehicle")) {
-      router.push("/commutes/choose-ride");
+      router.push("/route-planner");
       return;
     }
     toast({
