@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { UserLayout } from "@/components/layouts/user-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -274,7 +275,7 @@ function OwnerDetails({
   );
 }
 
-export default function CarOwnerPage() {
+function CarOwnerPageContent() {
   const searchParams = useSearchParams();
   const typeParam = searchParams?.get("type");
   const idParam = Number(searchParams?.get("id"));
@@ -364,5 +365,13 @@ export default function CarOwnerPage() {
         </div>
       </div>
     </UserLayout>
+  );
+}
+
+export default function CarOwnerPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CarOwnerPageContent />
+    </Suspense>
   );
 }
