@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Car, ArrowRight, MapPin, Bike, Train } from "lucide-react";
 import { useRouter } from "next/navigation";
-
 import Openrouteservice from "openrouteservice-js";
 
 // Dynamically import the map component to avoid SSR issues
@@ -204,7 +203,7 @@ export default function RoutePlannerPage() {
                     {travelOptions.map(opt => (
                       <div
                         key={opt.key}
-                        className={`flex items-center justify-between p-3 rounded cursor-pointer border ${travelMode === opt.key ? "bg-blue-100 border-blue-500" : "bg-white border-gray-200"}`}
+                        className={`flex items-center justify-between p-3 rounded cursor-pointer border transition-all duration-200 hover:shadow-md ${travelMode === opt.key ? "bg-blue-100 border-blue-500 shadow-sm" : "bg-white border-gray-200 hover:border-gray-300"}`}
                         onClick={() => setTravelMode(opt.key as any)}
                       >
                         <div className="flex items-center gap-3">
